@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS "customer";
+CREATE TABLE "customer" ("id" INTEGER PRIMARY KEY NOT NULL UNIQUE, "fullname" VARCHAR,"mobile" VARCHAR,"address" VARCHAR,"note" VARCHAR,"code" VARCHAR);
+INSERT INTO "customer" VALUES(1,'Nguyễn Thanh Long','0919410361','Cần Thơ','Mua nhiều','KH001');
+DROP TABLE IF EXISTS "order";
+CREATE TABLE "order" ("id" INTEGER PRIMARY KEY  NOT NULL UNIQUE, "customerid" INTEGER, "paydate" DATETIME, "completed" BOOL);
+INSERT INTO "order" VALUES(1,1,'2017/01/01',0);
+DROP TABLE IF EXISTS "orderdetail";
+CREATE TABLE "orderdetail" ("orderid" INTEGER NOT NULL, "productid" INTEGER NOT NULL , "price" DOUBLE NOT NULL , "quantity" FLOAT, PRIMARY KEY ("orderid", "productid", "price"));
+INSERT INTO "orderdetail" VALUES(1,1,20000,12);
+DROP TABLE IF EXISTS "product";
+CREATE TABLE "product" ("id" INTEGER PRIMARY KEY  NOT NULL UNIQUE, "code" VARCHAR, "name" VARCHAR, "unit" VARCHAR, "price" FLOAT, "image" VARCHAR, "quantity" INTEGER);
+INSERT INTO "product" VALUES(1,'C001','Cát xây','m3',10000,NULL,10000);

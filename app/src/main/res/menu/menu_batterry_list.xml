@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="vn.com.batteryshop.vn.com.onlineshop.Batterry_List_Activity">
+    <item
+        android:id="@+id/mnXem"
+        android:orderInCategory="100"
+        android:title="@string/action_View"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mnXoa"
+        android:orderInCategory="100"
+        android:title="@string/action_Delete"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mnSua"
+        android:orderInCategory="100"
+        android:title="@string/action_Update"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mnThem"
+        android:orderInCategory="100"
+        android:title="@string/action_New"
+        app:showAsAction="never" />
+</menu>
