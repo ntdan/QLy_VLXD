@@ -5,9 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.ArrayAdapter;
-
-import java.util.ArrayList;
+import android.util.Log;
 
 /**
  * Created by ntdan on 5/20/17.
@@ -15,25 +13,28 @@ import java.util.ArrayList;
 
 public class SQLite_DB extends SQLiteOpenHelper {
     public SQLite_DB(Context context) {
-        super(context, "vlxd", null, 1);
+        super(context, "vlxd.sqlite", null, 2);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = "DROP TABLE IF EXISTS \"customer\";\n" +
-                "CREATE TABLE \"customer\" (\"id\" INTEGER PRIMARY KEY NOT NULL UNIQUE, \"fullname\" VARCHAR,\"mobile\" VARCHAR,\"address\" VARCHAR,\"note\" VARCHAR,\"code\" VARCHAR);\n" +
-                "INSERT INTO \"customer\" VALUES(1,'Nguyễn Thanh Long','0919410361','Cần Thơ','Mua nhiều','KH001');\n" +
-                "DROP TABLE IF EXISTS \"order\";\n" +
-                "CREATE TABLE \"order\" (\"id\" INTEGER PRIMARY KEY  NOT NULL UNIQUE, \"customerid\" INTEGER, \"paydate\" DATETIME, \"completed\" BOOL);\n" +
-                "INSERT INTO \"order\" VALUES(1,1,'2017/01/01',0);\n" +
-                "DROP TABLE IF EXISTS \"orderdetail\";\n" +
-                "CREATE TABLE \"orderdetail\" (\"orderid\" INTEGER NOT NULL, \"productid\" INTEGER NOT NULL , \"price\" DOUBLE NOT NULL , \"quantity\" FLOAT, PRIMARY KEY (\"orderid\", \"productid\", \"price\"));\n" +
-                "INSERT INTO \"orderdetail\" VALUES(1,1,20000,12);\n" +
-                "DROP TABLE IF EXISTS \"product\";\n" +
-                "CREATE TABLE \"product\" (\"id\" INTEGER PRIMARY KEY  NOT NULL UNIQUE, \"code\" VARCHAR, \"name\" VARCHAR, \"unit\" VARCHAR, \"price\" FLOAT, \"image\" VARCHAR, \"quantity\" INTEGER);\n" +
-                "INSERT INTO \"product\" VALUES(1,'C001','Cát xây','m3',10000,NULL,10000);";
+        try {
+            db.execSQL("DROP TABLE IF EXISTS orderdetail");
+            db.execSQL("DROP TABLE IF EXISTS orders");
+            db.execSQL("DROP TABLE IF EXISTS product");
+            db.execSQL("DROP TABLE IF EXISTS customer");
 
-        db.execSQL(sql);
+            db.execSQL("CREATE TABLE customer (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, fullname VARCHAR,mobile VARCHAR,address VARCHAR,note VARCHAR,code VARCHAR)");
+            db.execSQL("INSERT INTO customer(fullname, mobile, address, note, code) VALUES('Nguyễn Thanh Long','0919410361','Cần Thơ','Mua nhiều','KH001')");
+            db.execSQL("CREATE TABLE product (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, code VARCHAR, name VARCHAR, unit VARCHAR, price FLOAT, image VARCHAR, quantity INTEGER)");
+            db.execSQL("INSERT INTO product (code, name, unit, price, image, quantity) VALUES('C001','Cát xây','m3',10000,'',10000)");
+            db.execSQL("CREATE TABLE orders (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, customerid INTEGER, paydate DATETIME, completed BOOL,ship_address VARCHAR)");
+            db.execSQL("INSERT INTO orders (customerid, customer, paydate, completed, shipaddess) VALUES(1name,'Nguyen Van An','2017/01/01',0,'01 Chau Van Liem')");
+            db.execSQL("CREATE TABLE orderdetail (orderid INTEGER NOT NULL, productid INTEGER NOT NULL , price DOUBLE NOT NULL , quantity FLOAT, PRIMARY KEY (orderid, productid, price))");
+            db.execSQL("INSERT INTO orderdetail VALUES(1,1,20000,12)");
+        } catch (Exception e) {
+            Log.d("Loi: ", e.toString());
+        }
     }
 
     @Override
@@ -55,7 +56,7 @@ public class SQLite_DB extends SQLiteOpenHelper {
 
     public Cursor find(String sql)
     {
-        Cursor cursor = getReadableDatabase().rawQuery(sql,null);
+        Cursor cursor = this.getReadableDatabase().rawQuery(sql, null);
         if(cursor.moveToFirst())
         {
             return cursor;

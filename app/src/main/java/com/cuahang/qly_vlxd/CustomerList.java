@@ -11,37 +11,32 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.cuahang.qly_vlxd.libs.Product;
+import com.cuahang.qly_vlxd.libs.Customer;
 
-public class ProductList extends AppCompatActivity {
+public class CustomerList extends AppCompatActivity {
 
-    Product product;
-    ListView listViewPro;
-    Product.DBAdapter adapter;
-    private int proCode = 1000;
-    private boolean chonMua;
+    Customer customer;
+    ListView listViewCus;
+    boolean chonMua = false;
+    Customer.DBAdapter adapter;
+    private int cusCode = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_list);
+        setContentView(R.layout.activity_customer_list);
 
-        if (product == null) {
-
-            if (getIntent() != null) {
-                chonMua = getIntent().getBooleanExtra("mua", false);
+        if (customer == null) {
+            listViewCus = (ListView) findViewById(R.id.lvCustomer);
+            customer = new Customer(CustomerList.this);
+            customer.setId(0);
+            customer.find();
+            if (customer.list != null && customer.list.size() > 0) {
+                adapter = customer.new DBAdapter(customer.list, CustomerList.this);
+                listViewCus.setAdapter(adapter);
             }
 
-            listViewPro = (ListView) findViewById(R.id.lvProduct);
-            product = new Product(ProductList.this);
-            product.setId(0);
-            product.find();
-            if (product.list != null && product.list.size() > 0) {
-                adapter = product.new DBAdapter(product.list, ProductList.this);
-                listViewPro.setAdapter(adapter);
-            }
-
-            registerForContextMenu(listViewPro);
+            registerForContextMenu(listViewCus);
         }
     }
 
@@ -49,14 +44,13 @@ public class ProductList extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK && requestCode == proCode) {
-            product.find();
-            if (product.list != null && product.list.size() > 0) {
-                adapter = product.new DBAdapter(product.list, ProductList.this);
-                listViewPro.setAdapter(adapter);
+        if (resultCode == RESULT_OK && requestCode == cusCode) {
+            customer.find();
+            if (customer.list != null && customer.list.size() > 0) {
+                adapter = customer.new DBAdapter(customer.list, CustomerList.this);
+                listViewCus.setAdapter(adapter);
             }
-
-            registerForContextMenu(listViewPro);
+            registerForContextMenu(listViewCus);
         }
     }
 
@@ -72,8 +66,8 @@ public class ProductList extends AppCompatActivity {
 
         getMenuInflater().inflate(R.menu.menu_list, menu);
 
-        if (!chonMua)
-            menu.findItem(R.id.mnMua).setVisible(false);
+        menu.findItem(R.id.mnMua).setVisible(false);
+
     }
 
     @Override
@@ -81,20 +75,20 @@ public class ProductList extends AppCompatActivity {
 
         if (item.getItemId() == R.id.mnXoa) {
             AdapterView.AdapterContextMenuInfo inf = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            String strID = ((TextView) inf.targetView.findViewById(R.id.tvProID)).getText().toString();
-            product.setId(Integer.parseInt(strID));
-            if (product.delete()) {
-                if (product.list.size() > 0) {
-                    for (int i = 0; i < product.list.size(); i++) {
-                        if (product.list.get(i).getId() == product.getId()) {
-                            product.list.remove(i);
+            String strID = ((TextView) inf.targetView.findViewById(R.id.tvCusID)).getText().toString();
+            customer.setId(Integer.parseInt(strID));
+            if (customer.delete()) {
+                if (customer.list.size() > 0) {
+                    for (int i = 0; i < customer.list.size(); i++) {
+                        if (customer.list.get(i).getId() == customer.getId()) {
+                            customer.list.remove(i);
                             break;
                         }
                     }
                 }
 
                 adapter.notifyDataSetChanged();
-                product.setId(0);
+                customer.setId(0);
             }
             return true;
         }
@@ -105,8 +99,8 @@ public class ProductList extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.mnuAdd) {
-            Intent pro = new Intent(ProductList.this, NewProduct.class);
-            startActivityForResult(pro, proCode);
+            Intent cus = new Intent(CustomerList.this, NewCustomer.class);
+            startActivityForResult(cus, cusCode);
             return true;
         }
 

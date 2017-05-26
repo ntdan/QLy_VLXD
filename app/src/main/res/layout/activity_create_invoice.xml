@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,12 +19,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/etCustomer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="@string/hint_name"
+                android:hint="Nhập họ tên"
                 android:inputType="textPersonName"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/white" />
@@ -55,7 +54,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="@string/hint_address"
+                android:hint="Địa chỉ giao hàng"
                 android:inputType="number"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/white" />
@@ -70,7 +69,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="@string/hint_Pay"
+                android:hint="Số tiền trả trước"
                 android:inputType="number"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/white" />
@@ -85,8 +84,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="Total:"
                 android:inputType="number"
+                android:text="Total:"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/white" />
         </android.support.design.widget.TextInputLayout>
@@ -96,22 +95,22 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <Button
-                android:id="@+id/btn_Product"
+                android:id="@+id/btnSelectProduct"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dip"
                 android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="20dip"
                 android:layout_weight="1"
                 android:background="@color/colorPrimaryDark"
                 android:text="@string/btn_AddProduct"
                 android:textColor="@color/colorWhite" />
 
             <Button
-                android:id="@+id/btn_Create"
+                android:id="@+id/btnCreateInvoice"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dip"
                 android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="20dip"
                 android:layout_weight="1"
                 android:background="@color/colorPrimaryDark"
                 android:text="@string/btn_Create"

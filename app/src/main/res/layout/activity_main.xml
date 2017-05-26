@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,61 +11,62 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:padding="24dp"
         android:background="#11000000"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="24dp">
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:weightSum="2"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2">
             <Button
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:textColor="@color/colorWhite"
                 android:layout_weight="1"
                 android:background="@drawable/button_background"
-                android:text="Hóa đơn" />
+                android:text="Hóa đơn"
+                android:textColor="@color/colorWhite" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btnCustomer"
                 android:layout_width="wrap_content"
-                android:background="@drawable/button_background"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:layout_weight="1"
                 android:layout_marginLeft="8dp"
-                android:text="Khách hàng" />
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:onClick="click"
+                android:text="Khách hàng"
+                android:textColor="@color/colorWhite" />
         </LinearLayout>
         <LinearLayout
-            android:layout_marginTop="8dp"
-            android:weightSum="2"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
             <Button
                 android:id="@+id/btnProduct"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:onClick="click"
                 android:layout_weight="1"
                 android:background="@drawable/button_background"
-                android:text="Sản phầm" />
+                android:onClick="click"
+                android:text="Sản phầm"
+                android:textColor="@color/colorWhite" />
 
             <Button
                 android:id="@+id/btnExit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
                 android:layout_marginLeft="8dp"
-                android:onClick="click"
                 android:layout_weight="1"
                 android:background="@drawable/button_background"
-                android:text="Thoát" />
+                android:onClick="click"
+                android:text="Thoát"
+                android:textColor="@color/colorWhite" />
         </LinearLayout>
     </LinearLayout>
 

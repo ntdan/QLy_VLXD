@@ -10,7 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Customer_UnCompletedPayment"
@@ -22,12 +26,9 @@
             android:label="@string/title_activity_new_product"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ProductList">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+        <activity android:name=".CustomerList" />
+        <activity android:name=".NewCustomer"></activity>
     </application>
 
 </manifest>

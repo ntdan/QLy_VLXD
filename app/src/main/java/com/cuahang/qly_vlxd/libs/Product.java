@@ -19,6 +19,7 @@ import java.util.ArrayList;
  */
 
 public class Product {
+    public ArrayList<Product> list;
     int id;
     String code;
     String name;
@@ -26,10 +27,10 @@ public class Product {
     String quantity;
     String image;
     String unit;
-
-   public ArrayList<Product> list;
-
     SQLite_DB db;
+
+    public Product() {
+    }
 
     public Product(Context context) {
         db = new SQLite_DB(context);
@@ -111,7 +112,7 @@ public class Product {
         contentValues.put("unit",unit);
         contentValues.put("image","");
 
-       return db.add("product", contentValues) > 0 ? true : false;
+        return db.add("product", contentValues) > 0;
     }
 
     public boolean update()
@@ -124,26 +125,37 @@ public class Product {
         contentValues.put("unit",unit);
         contentValues.put("image","");
 
-        return db.update("product", contentValues, "where id="+id, null) > 0 ? true : false;
+        return db.update("product", contentValues, " id=" + id, null) > 0;
     }
 
     public boolean delete()
     {
-        return db.delete("product", "where id="+id, null) > 0 ? true : false;
+        return db.delete("product", " id=" + id, null) > 0;
     }
 
     public void find()
     {
-        String sql = "select * from product where id="+ id;
+        String sql = "select id, code, name, unit, price, image, quantity from product where id=" + id;
         if(id == 0)
         {
-            sql = "select * from product";
+            sql = "select id, code, name, unit, price, image, quantity from product";
         }
-        Cursor cursor = db.find(sql);
+        Cursor cursor = db.find(sql + " order by id desc");
 
         if (cursor.moveToFirst())
         {
             list = new ArrayList<>();
+            do {
+                Product pro = new Product();
+                pro.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                pro.setCode(cursor.getString(cursor.getColumnIndex("code")));
+                pro.setName(cursor.getString(cursor.getColumnIndex("name")));
+                pro.setPrice(cursor.getString(cursor.getColumnIndex("price")));
+                pro.setImage(cursor.getString(cursor.getColumnIndex("image")));
+                pro.setQuantity(cursor.getString(cursor.getColumnIndex("quantity")));
+
+                list.add(pro);
+            } while (cursor.moveToNext());
         }else
         {
             list = null;
@@ -183,7 +195,7 @@ public class Product {
                 item = new Item();
 
                 convertView = ((Activity)context).getLayoutInflater().inflate(R.layout.product_layout, parent, false);
-                item.code = (TextView)convertView.findViewById(R.id.tvProCode);
+                item.id = (TextView) convertView.findViewById(R.id.tvProID);
                 item.name = (TextView)convertView.findViewById(R.id.tvProName);
                 item.price = (TextView)convertView.findViewById(R.id.tvProPrice);
                 item.unit = (TextView)convertView.findViewById(R.id.tvProUnit);
@@ -194,7 +206,7 @@ public class Product {
                 item = (Item)convertView.getTag();
             }
 
-            item.code.setText(list.get(position).getId()+"");
+            item.id.setText(list.get(position).getId() + "");
             item.name.setText(list.get(position).getName());
             item.price.setText(list.get(position).getPrice());
             item.unit.setText(list.get(position).getUnit());
@@ -203,7 +215,7 @@ public class Product {
         }
 
         class Item {
-            TextView name, price, unit, code;
+            TextView name, price, unit, id;
         }
     }
 }

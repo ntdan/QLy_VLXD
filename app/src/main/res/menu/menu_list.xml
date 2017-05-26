@@ -1,7 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="vn.com.batteryshop.vn.com.onlineshop.Batterry_List_Activity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/mnXem"
         android:orderInCategory="100"
@@ -21,8 +19,8 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/mnThem"
+        android:id="@+id/mnMua"
         android:orderInCategory="100"
-        android:title="@string/action_New"
+        android:title="Mua"
         app:showAsAction="never" />
 </menu>
