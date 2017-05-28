@@ -20,14 +20,15 @@
             android:orientation="horizontal"
             android:weightSum="2">
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btnCreateInvoice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_weight="1"
                 android:background="@drawable/button_background"
-                android:text="Hóa đơn"
+                android:onClick="click"
+                android:text="Các hóa đơn"
                 android:textColor="@color/colorWhite" />
 
             <Button

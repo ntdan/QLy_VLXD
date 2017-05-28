@@ -24,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
             intent = new Intent(MainActivity.this, CustomerList.class);
         }
 
+        if (v.getId() == R.id.btnCreateInvoice) {
+            intent = new Intent(MainActivity.this, Customer_UnCompletedPayment.class);
+        }
+
 
         if(v.getId() == R.id.btnExit){
             finish();

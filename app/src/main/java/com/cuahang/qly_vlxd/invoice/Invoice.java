@@ -3,10 +3,13 @@ package com.cuahang.qly_vlxd.invoice;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.cuahang.qly_vlxd.R;
@@ -22,34 +25,45 @@ public class Invoice {
     public ArrayList<Invoice> list;
     int id;
     int customerID;
-    String customerName;
+    String customerNane;
+    String customerMobile;
     String shipAddress;
     String buyDate;
+    float total;
     int payComplete;// 1= completed
     SQLite_DB db;
+    Context c;
 
     public Invoice() {
     }
 
     public Invoice(Context context) {
         db = new SQLite_DB(context);
+        c = context;
     }
 
-    public Invoice(int id, int customerID, String customerName, String shipAddress, String buyDate, int payComplete) {
-        this.id = id;
-        this.customerID = customerID;
-        this.customerName = customerName;
-        this.shipAddress = shipAddress;
-        this.buyDate = buyDate;
-        this.payComplete = payComplete;
+    public float getTotal() {
+        return total;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public void setTotal(float total) {
+        this.total = total;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public String getCustomerNane() {
+        return customerNane;
+    }
+
+    public void setCustomerNane(String customerNane) {
+        this.customerNane = customerNane;
+    }
+
+    public String getCustomerMobile() {
+        return customerMobile;
+    }
+
+    public void setCustomerMobile(String customerMobile) {
+        this.customerMobile = customerMobile;
     }
 
     public int getPayComplete() {
@@ -99,7 +113,6 @@ public class Invoice {
     public boolean add() {
         ContentValues contentValues = new ContentValues();
         contentValues.put("customerid", customerID);
-        contentValues.put("customername", customerName);
         contentValues.put("shipaddess", shipAddress);
         contentValues.put("completed", payComplete);
         contentValues.put("paydate", buyDate);
@@ -110,7 +123,6 @@ public class Invoice {
     public boolean update() {
         ContentValues contentValues = new ContentValues();
         contentValues.put("customerid", customerID);
-        contentValues.put("customername", customerName);
         contentValues.put("shipaddess", shipAddress);
         contentValues.put("completed", payComplete);
         contentValues.put("paydate", buyDate);
@@ -123,23 +135,24 @@ public class Invoice {
     }
 
     public void find() {
-        String sql = "select * from invoice where id=" + id;
+        String sql = "SELECT orders.id, orders.customerid, orders.paydate, orders.completed,orders.shipaddress, fullname, mobile FROM orders, customer where customer.id = orders.customerid and id=" + id;
         if (id == 0) {
-            sql = "select * from invoice";
+            sql = "SELECT orders.id, orders.customerid, orders.paydate, orders.completed,orders.shipaddress, fullname, mobile FROM orders, customer where customer.id = orders.customerid";
         }
-        Cursor cursor = db.find(sql + " order by id desc");
+        Cursor cursor = db.find(sql + " order by orders.customerid desc");
 
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             list = new ArrayList<>();
             do {
                 //customername, customerid, paydate, completed, shipaddess
                 Invoice invoice = new Invoice();
                 invoice.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 invoice.setCustomerID(cursor.getInt(cursor.getColumnIndex("customerid")));
-                invoice.setCustomerName(cursor.getString(cursor.getColumnIndex("customername")));
+                invoice.setCustomerNane(cursor.getString(cursor.getColumnIndex("fullname")));
+                invoice.setCustomerMobile(cursor.getString(cursor.getColumnIndex("mobile")));
                 invoice.setBuyDate(cursor.getString(cursor.getColumnIndex("paydate")));
                 invoice.setPayComplete(cursor.getInt(cursor.getColumnIndex("completed")));
-                invoice.setShipAddress(cursor.getString(cursor.getColumnIndex("shipaddess")));
+                invoice.setShipAddress(cursor.getString(cursor.getColumnIndex("shipaddress")));
 
                 list.add(invoice);
 
@@ -174,17 +187,17 @@ public class Invoice {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Item item;
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final Item item;
             if (convertView == null) {
                 item = new Item();
 
                 convertView = ((Activity) context).getLayoutInflater().inflate(R.layout.invoice_item, parent, false);
-                item.id = (TextView) convertView.findViewById(R.id.tvCusID);
-                //item.name = (TextView)convertView.findViewById(R.id.tvCusName);
-                //item.address = (TextView)convertView.findViewById(R.id.tvCusAddress);
-                //item.mobile = (TextView)convertView.findViewById(R.id.tvCusMobile);
-
+                item.id = (TextView) convertView.findViewById(R.id.tvID);
+                item.customername = (TextView) convertView.findViewById(R.id.tvCustomerName);
+                item.total = (TextView) convertView.findViewById(R.id.tvTotal);
+                item.mobile = (TextView) convertView.findViewById(R.id.tvMobile);
+                item.btnCall = (ImageButton) convertView.findViewById(R.id.btnCall);
                 convertView.setTag(item);
 
                 convertView.setLongClickable(true);
@@ -192,16 +205,25 @@ public class Invoice {
                 item = (Item) convertView.getTag();
             }
 
+            item.btnCall.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + list.get(position).getCustomerMobile()));
+                    c.startActivity(intent);
+                }
+            });
+
             item.id.setText(list.get(position).getId() + "");
-            //item.name.setText(list.get(position).getFullname());
-            //item.address.setText(list.get(position).getFullname());
-            //item.mobile.setText(list.get(position).getMobile());
+            item.customername.setText(list.get(position).getCustomerNane());
+            item.total.setText(list.get(position).getTotal() + "");
+            item.mobile.setText(list.get(position).getCustomerMobile());
 
             return convertView;
         }
 
         class Item {
-            TextView id, customername, customerid, paydate, completed, shipaddess;
+            TextView id, customername, total, mobile;
+            ImageButton btnCall;
         }
     }
 }

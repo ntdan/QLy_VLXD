@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="2dp"
     android:background="@drawable/border"
-    android:orientation="horizontal"
     android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:padding="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_weight="1"
+        android:orientation="vertical"
         android:weightSum="2">
 
         <TextView
@@ -28,12 +27,23 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/tvMobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:gravity="center_vertical"
+            android:paddingLeft="8dp"
+            android:text="pin dien thoai"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvCustomerName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:paddingLeft="8dp"
+            android:padding="8dp"
             android:text="Nguyễn Văn Mít"
             android:textColor="@color/colorPrimary" />
 
@@ -43,33 +53,25 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:paddingLeft="8dp"
+            android:padding="8dp"
             android:text="2000000"
             android:textColor="@color/colorAccent" />
     </LinearLayout>
     <LinearLayout
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_weight="0">
+        android:layout_weight="0"
+        android:gravity="center|bottom"
+        android:orientation="vertical">
 
-        <Button
+        <ImageButton
             android:id="@+id/btnCall"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_background"
-            android:textColor="@color/colorWhite"
             android:layout_marginBottom="4dp"
-            android:text="Gọi điện" />
-
-        <Button
-            android:id="@+id/btnView"
-            android:layout_marginTop="4dp"
             android:background="@drawable/button_background"
-            android:textColor="@color/colorWhite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Xem" />
+            android:src="@android:drawable/ic_menu_call"
+            android:text="Gọi điện"
+            android:textColor="@color/colorWhite" />
     </LinearLayout>
 </LinearLayout>

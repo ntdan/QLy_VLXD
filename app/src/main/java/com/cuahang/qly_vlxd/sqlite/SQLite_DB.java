@@ -13,7 +13,7 @@ import android.util.Log;
 
 public class SQLite_DB extends SQLiteOpenHelper {
     public SQLite_DB(Context context) {
-        super(context, "vlxd.sqlite", null, 2);
+        super(context, "vlxd.sqlite", null, 3);
     }
 
     @Override
@@ -28,8 +28,8 @@ public class SQLite_DB extends SQLiteOpenHelper {
             db.execSQL("INSERT INTO customer(fullname, mobile, address, note, code) VALUES('Nguyễn Thanh Long','0919410361','Cần Thơ','Mua nhiều','KH001')");
             db.execSQL("CREATE TABLE product (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, code VARCHAR, name VARCHAR, unit VARCHAR, price FLOAT, image VARCHAR, quantity INTEGER)");
             db.execSQL("INSERT INTO product (code, name, unit, price, image, quantity) VALUES('C001','Cát xây','m3',10000,'',10000)");
-            db.execSQL("CREATE TABLE orders (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, customerid INTEGER, paydate DATETIME, completed BOOL,ship_address VARCHAR)");
-            db.execSQL("INSERT INTO orders (customerid, customer, paydate, completed, shipaddess) VALUES(1name,'Nguyen Van An','2017/01/01',0,'01 Chau Van Liem')");
+            db.execSQL("CREATE TABLE orders (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, customerid INTEGER, paydate DATETIME, completed BOOL,shipaddress VARCHAR)");
+            db.execSQL("INSERT INTO orders (customerid, paydate, completed, shipaddress) VALUES(1,'2017/01/01',0,'01 Chau Van Liem')");
             db.execSQL("CREATE TABLE orderdetail (orderid INTEGER NOT NULL, productid INTEGER NOT NULL , price DOUBLE NOT NULL , quantity FLOAT, PRIMARY KEY (orderid, productid, price))");
             db.execSQL("INSERT INTO orderdetail VALUES(1,1,20000,12)");
         } catch (Exception e) {
