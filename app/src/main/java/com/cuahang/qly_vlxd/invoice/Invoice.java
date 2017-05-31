@@ -113,21 +113,21 @@ public class Invoice {
     public boolean add() {
         ContentValues contentValues = new ContentValues();
         contentValues.put("customerid", customerID);
-        contentValues.put("shipaddess", shipAddress);
+        contentValues.put("shipaddress", shipAddress);
         contentValues.put("completed", payComplete);
         contentValues.put("paydate", buyDate);
 
-        return db.add("invoice", contentValues) > 0;
+        return db.add("orders", contentValues) > 0;
     }
 
     public boolean update() {
         ContentValues contentValues = new ContentValues();
         contentValues.put("customerid", customerID);
-        contentValues.put("shipaddess", shipAddress);
+        contentValues.put("shipaddress", shipAddress);
         contentValues.put("completed", payComplete);
         contentValues.put("paydate", buyDate);
 
-        return db.update("invoice", contentValues, " id=" + id, null) > 0;
+        return db.update("orders", contentValues, " id=" + id, null) > 0;
     }
 
     public boolean delete() {
@@ -135,9 +135,13 @@ public class Invoice {
     }
 
     public void find() {
-        String sql = "SELECT orders.id, orders.customerid, orders.paydate, orders.completed,orders.shipaddress, fullname, mobile FROM orders, customer where customer.id = orders.customerid and id=" + id;
+        String sql = "SELECT orders.id, orders.customerid, orders.paydate, orders.completed,orders.shipaddress, fullname, mobile, sum(price*quantity) total\n" +
+                "FROM orders, customer, orderdetail \n" +
+                "where customer.id = orders.customerid and orders.id = orderdetail.orderid and id=" + id + " group by orders.id";
         if (id == 0) {
-            sql = "SELECT orders.id, orders.customerid, orders.paydate, orders.completed,orders.shipaddress, fullname, mobile FROM orders, customer where customer.id = orders.customerid";
+            sql = "SELECT orders.id, orders.customerid, orders.paydate, orders.completed,orders.shipaddress, fullname, mobile, sum(price*quantity) total\n" +
+                    "FROM orders, customer, orderdetail \n" +
+                    "where customer.id = orders.customerid and orders.id = orderdetail.orderid group by orders.id";
         }
         Cursor cursor = db.find(sql + " order by orders.customerid desc");
 
@@ -153,6 +157,7 @@ public class Invoice {
                 invoice.setBuyDate(cursor.getString(cursor.getColumnIndex("paydate")));
                 invoice.setPayComplete(cursor.getInt(cursor.getColumnIndex("completed")));
                 invoice.setShipAddress(cursor.getString(cursor.getColumnIndex("shipaddress")));
+                invoice.setTotal(cursor.getInt(cursor.getColumnIndex("total")));
 
                 list.add(invoice);
 

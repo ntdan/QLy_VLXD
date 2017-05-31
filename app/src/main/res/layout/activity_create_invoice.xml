@@ -50,12 +50,12 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/etAddress"
+                android:id="@+id/etShipAddress"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:hint="Địa chỉ giao hàng"
-                android:inputType="number"
+                android:inputType="text"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/white" />
         </android.support.design.widget.TextInputLayout>
@@ -64,15 +64,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/etPrePay"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="Số tiền trả trước"
-                android:inputType="number"
-                android:textColor="@android:color/black"
-                android:textColorHint="@android:color/white" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -102,6 +93,7 @@
                 android:layout_marginTop="20dip"
                 android:layout_weight="1"
                 android:background="@color/colorPrimaryDark"
+                android:onClick="addProduct"
                 android:text="@string/btn_AddProduct"
                 android:textColor="@color/colorWhite" />
 
@@ -113,6 +105,7 @@
                 android:layout_marginTop="20dip"
                 android:layout_weight="1"
                 android:background="@color/colorPrimaryDark"
+                android:onClick="create"
                 android:text="@string/btn_Create"
                 android:textColor="@color/colorWhite" />
         </LinearLayout>

@@ -3,6 +3,7 @@
     package="com.cuahang.qly_vlxd">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/drill"
@@ -26,10 +27,10 @@
             android:name=".NewProduct"
             android:label="@string/title_activity_new_product"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ProductList">
-        </activity>
+        <activity android:name=".ProductList"></activity>
         <activity android:name=".CustomerList" />
-        <activity android:name=".NewCustomer"></activity>
+        <activity android:name=".NewCustomer" />
+        <activity android:name=".InvoiceDetail"></activity>
     </application>
 
 </manifest>

@@ -38,7 +38,7 @@
     <string name="btn_start">Sử dụng ngay</string>
     <string name="fullname">Họ tên</string>
     <string name="action_New">Thêm mới</string>
-    <string name="title_activity_customer__un_completed_payment">Danh sách khách hàng còn nợ
+    <string name="title_activity_customer__un_completed_payment">Khách hàng còn nợ
     </string>
     <string name="hint_mobile">Số điện thoại</string>
     <string name="hint_address">Địa chỉ</string>
