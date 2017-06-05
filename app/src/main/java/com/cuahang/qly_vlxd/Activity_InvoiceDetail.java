@@ -11,11 +11,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class InvoiceDetail extends AppCompatActivity {
+import com.cuahang.qly_vlxd.libs.InvoiceDetail;
+
+
+public class Activity_InvoiceDetail extends AppCompatActivity {
 
     InvoiceDetail invoiceDetail;
     ListView listViewInvoiceDetail;
-    com.cuahang.qly_vlxd.invoice.InvoiceDetail.DBAdapter adapter;
+    InvoiceDetail.DBAdapter adapter;
     private int cusCode = 1000;
 
     @Override
@@ -24,14 +27,14 @@ public class InvoiceDetail extends AppCompatActivity {
         setContentView(R.layout.activity_invoice_detail);
 
         if (invoiceDetail == null) {
-            /*listViewInvoiceDetail = (ListView) findViewById(R.id.lvCustomer);
-            invoiceDetail = new InvoiceDetail(InvoiceDetail.this);
-            invoiceDetail.setId(0);
+            listViewInvoiceDetail = (ListView) findViewById(R.id.lvCustomer);
+            invoiceDetail = new InvoiceDetail(Activity_InvoiceDetail.this);
+            invoiceDetail.setInvoiceID(0);
             invoiceDetail.find();
             if (invoiceDetail.list != null && invoiceDetail.list.size() > 0) {
-                adapter = invoiceDetail.new DBAdapter(invoiceDetail.list, CustomerList.this);
+                adapter = invoiceDetail.new DBAdapter(invoiceDetail.list, Activity_InvoiceDetail.this);
                 listViewInvoiceDetail.setAdapter(adapter);
-            }*/
+            }
 
             registerForContextMenu(listViewInvoiceDetail);
         }
@@ -42,12 +45,12 @@ public class InvoiceDetail extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK && requestCode == cusCode) {
-            /*invoiceDetail.find();
+            invoiceDetail.find();
             if (invoiceDetail.list != null && invoiceDetail.list.size() > 0) {
-                adapter = invoiceDetail.new DBAdapter(invoiceDetail.list, CustomerList.this);
+                adapter = invoiceDetail.new DBAdapter(invoiceDetail.list, Activity_InvoiceDetail.this);
                 listViewInvoiceDetail.setAdapter(adapter);
             }
-            registerForContextMenu(listViewInvoiceDetail);*/
+            registerForContextMenu(listViewInvoiceDetail);
         }
     }
 
@@ -73,20 +76,20 @@ public class InvoiceDetail extends AppCompatActivity {
         if (item.getItemId() == R.id.mnXoa) {
             AdapterView.AdapterContextMenuInfo inf = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             String strID = ((TextView) inf.targetView.findViewById(R.id.tvCusID)).getText().toString();
-           /* customer.setId(Integer.parseInt(strID));
-            if (customer.delete()) {
-                if (customer.list.size() > 0) {
-                    for (int i = 0; i < customer.list.size(); i++) {
-                        if (customer.list.get(i).getId() == customer.getId()) {
-                            customer.list.remove(i);
+            invoiceDetail.setInvoiceID(Integer.parseInt(strID));
+            if (invoiceDetail.delete()) {
+                if (invoiceDetail.list.size() > 0) {
+                    for (int i = 0; i < invoiceDetail.list.size(); i++) {
+                        if (invoiceDetail.list.get(i).getInvoiceID() == invoiceDetail.getInvoiceID()) {
+                            invoiceDetail.list.remove(i);
                             break;
                         }
                     }
                 }
 
                 adapter.notifyDataSetChanged();
-                customer.setId(0);
-            }*/
+                invoiceDetail.setInvoiceID(0);
+            }
             return true;
         }
         return true;
@@ -96,8 +99,8 @@ public class InvoiceDetail extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.mnuAdd) {
-            /*Intent cus = new Intent(CustomerList.this, NewCustomer.class);
-            startActivityForResult(cus, cusCode);*/
+            Intent cus = new Intent(Activity_InvoiceDetail.this, NewCustomer.class);
+            startActivityForResult(cus, cusCode);
             return true;
         }
 

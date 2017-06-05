@@ -12,7 +12,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.cuahang.qly_vlxd.invoice.Invoice;
+import com.cuahang.qly_vlxd.libs.Invoice;
 
 import java.util.Calendar;
 
@@ -68,6 +68,7 @@ public class CreateInvoice extends AppCompatActivity {
 
         return str;
     }
+
 
     public void create(View view) {
         invoice = new Invoice(CreateInvoice.this);

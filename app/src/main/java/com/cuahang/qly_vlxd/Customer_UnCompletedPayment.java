@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
-import com.cuahang.qly_vlxd.invoice.Invoice;
+import com.cuahang.qly_vlxd.libs.Invoice;
 
 public class Customer_UnCompletedPayment extends AppCompatActivity {
 

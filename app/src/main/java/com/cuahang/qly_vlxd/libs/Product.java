@@ -162,6 +162,15 @@ public class Product {
         }
     }
 
+    String[] getProducts() {
+        String[] str = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            str[i] = list.get(i).getName() + "-" + list.get(i).getPrice() + "-" + list.get(i).getId();
+        }
+
+        return str;
+    }
+
     public class DBAdapter extends BaseAdapter
     {
         ArrayList<Product> list;

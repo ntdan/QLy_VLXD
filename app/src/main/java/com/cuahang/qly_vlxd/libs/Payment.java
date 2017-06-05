@@ -1,4 +1,4 @@
-package com.cuahang.qly_vlxd.invoice;
+package com.cuahang.qly_vlxd.libs;
 
 import java.util.Date;
 

@@ -1,15 +1,12 @@
-package com.cuahang.qly_vlxd.invoice;
+package com.cuahang.qly_vlxd.libs;
 
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.cuahang.qly_vlxd.R;
@@ -104,29 +101,24 @@ public class InvoiceDetail {
     }
 
     public void find() {
-        String sql = "SELECT orders.id, orders.customerid, orders.paydate, orders.completed,orders.shipaddress, fullname, mobile, sum(price*quantity) total\n" +
-                "FROM orders, customer, orderdetail \n" +
-                "where customer.id = orders.customerid and orders.id = orderdetail.orderid and orders.id=" + invoiceID + " group by orders.id";
+        String sql = "SELECT orderid, productid, price, quantity " +
+                "FROM orders, product " +
+                "where order.productid = product.id and orderid=" + invoiceID + " group by orderid";
         if (invoiceID == 0) {
-            sql = "SELECT orders.id, orders.customerid, orders.paydate, orders.completed,orders.shipaddress, fullname, mobile, sum(price*quantity) total\n" +
-                    "FROM orders, customer, orderdetail \n" +
-                    "where customer.id = orders.customerid and orders.id = orderdetail.orderid group by orders.id";
+            sql = "SELECT orderid, productid, price, quantity " +
+                    "FROM orders, product " +
+                    "where order.productid = product.id  group by orderid";
         }
-        Cursor cursor = db.find(sql + " order by invoiceid desc");
+        Cursor cursor = db.find(sql + " order by orderid desc");
 
         if (cursor != null && cursor.moveToFirst()) {
             list = new ArrayList<>();
             do {
-                //customername, customerid, paydate, completed, shipaddess
                 InvoiceDetail invoiceDetail = new InvoiceDetail();
-                /*invoiceDetail.setId(cursor.getInt(cursor.getColumnIndex("id")));
-                invoiceDetail.setCustomerID(cursor.getInt(cursor.getColumnIndex("customerid")));
-                invoiceDetail.setCustomerNane(cursor.getString(cursor.getColumnIndex("fullname")));
-                invoiceDetail.setCustomerMobile(cursor.getString(cursor.getColumnIndex("mobile")));
-                invoiceDetail.setBuyDate(cursor.getString(cursor.getColumnIndex("paydate")));
-                invoiceDetail.setPayComplete(cursor.getInt(cursor.getColumnIndex("completed")));
-                invoiceDetail.setShipAddress(cursor.getString(cursor.getColumnIndex("shipaddress")));
-                invoiceDetail.setTotal(cursor.getInt(cursor.getColumnIndex("total")));*/
+                invoiceDetail.setProductID(cursor.getInt(cursor.getColumnIndex("productid")));
+                invoiceDetail.setInvoiceID(cursor.getInt(cursor.getColumnIndex("orderid")));
+                invoiceDetail.setPrice(cursor.getDouble(cursor.getColumnIndex("price")));
+                invoiceDetail.setQuantity(cursor.getDouble(cursor.getColumnIndex("quantity")));
 
                 list.add(invoiceDetail);
 
@@ -137,10 +129,10 @@ public class InvoiceDetail {
     }
 
     public class DBAdapter extends BaseAdapter {
-        ArrayList<Invoice> list;
+        ArrayList<InvoiceDetail> list;
         Context context;
 
-        public DBAdapter(ArrayList<Invoice> list, Context context) {
+        public DBAdapter(ArrayList<InvoiceDetail> list, Context context) {
             this.list = list;
             this.context = context;
         }
@@ -167,11 +159,11 @@ public class InvoiceDetail {
                 item = new Item();
 
                 convertView = ((Activity) context).getLayoutInflater().inflate(R.layout.invoice_item, parent, false);
-                item.id = (TextView) convertView.findViewById(R.id.tvID);
+                /*item.id = (TextView) convertView.findViewById(R.id.tvID);
                 item.customername = (TextView) convertView.findViewById(R.id.tvCustomerName);
                 item.total = (TextView) convertView.findViewById(R.id.tvTotal);
                 item.mobile = (TextView) convertView.findViewById(R.id.tvMobile);
-                item.btnCall = (ImageButton) convertView.findViewById(R.id.btnCall);
+                item.btnCall = (ImageButton) convertView.findViewById(R.id.btnCall);*/
                 convertView.setTag(item);
 
                 convertView.setLongClickable(true);
@@ -179,7 +171,7 @@ public class InvoiceDetail {
                 item = (Item) convertView.getTag();
             }
 
-            item.btnCall.setOnClickListener(new View.OnClickListener() {
+            /*item.btnCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + list.get(position).getCustomerMobile()));
@@ -190,14 +182,13 @@ public class InvoiceDetail {
             item.id.setText(list.get(position).getId() + "");
             item.customername.setText(list.get(position).getCustomerNane());
             item.total.setText(list.get(position).getTotal() + "");
-            item.mobile.setText(list.get(position).getCustomerMobile());
+            item.mobile.setText(list.get(position).getCustomerMobile());*/
 
             return convertView;
         }
 
         class Item {
-            TextView id, customername, total, mobile;
-            ImageButton btnCall;
+            TextView orderid, productid, price, quantity;
         }
     }
 }
