@@ -11,9 +11,12 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.cuahang.qly_vlxd.libs.Customer;
 import com.cuahang.qly_vlxd.libs.Invoice;
 
+import java.text.NumberFormat;
 import java.util.Calendar;
 
 public class CreateInvoice extends AppCompatActivity {
@@ -23,39 +26,51 @@ public class CreateInvoice extends AppCompatActivity {
     EditText etShipAddress, etMobile;
     TextView tvTotal;
     int invoiceID, customerID;
-    Invoice db;
-    private int invCode = 1000;
+    Customer db;
+    private int proList = 113;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_invoice);
 
-        if (db == null) {
-            db = new Invoice(CreateInvoice.this);
+        db = new Customer(CreateInvoice.this);
 
-            etShipAddress = (EditText) findViewById(R.id.etShipAddress);
-            etMobile = (EditText) findViewById(R.id.etMobie);
-            tvTotal = (TextView) findViewById(R.id.tvTotal);
+        invoice = new Invoice(CreateInvoice.this);
+        if (getIntent() != null)
+            invoice.setId(getIntent().getIntExtra("id", 0));
 
-            etName = (AutoCompleteTextView) findViewById(R.id.etCustomer);
-            etName.setAdapter(new ArrayAdapter<String>(
-                    CreateInvoice.this, android.R.layout.simple_list_item_1, getCustomer()));
-            etName.setThreshold(1);
 
-            etName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    etName.setText(((TextView) view).getText().toString().split("-")[0]);
-                    etMobile.setText(((TextView) view).getText().toString().split("-")[1]);
-                    customerID = Integer.parseInt(((TextView) view).getText().toString().split("-")[2]);
-                    etShipAddress.requestFocus();
-                    InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    im.showSoftInput(etShipAddress, InputMethodManager.SHOW_IMPLICIT);
-                }
-            });
+        etShipAddress = (EditText) findViewById(R.id.etShipAddress);
+        etMobile = (EditText) findViewById(R.id.etMobie);
+        tvTotal = (TextView) findViewById(R.id.tvTotal);
+
+        etName = (AutoCompleteTextView) findViewById(R.id.etCustomer);
+        etName.setAdapter(new ArrayAdapter<String>(
+                CreateInvoice.this, android.R.layout.simple_list_item_1, getCustomer()));
+        etName.setThreshold(1);
+
+        etName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                etName.setText(((TextView) view).getText().toString().split("-")[0]);
+                etMobile.setText(((TextView) view).getText().toString().split("-")[1]);
+                customerID = Integer.parseInt(((TextView) view).getText().toString().split("-")[2]);
+                etShipAddress.requestFocus();
+                InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.showSoftInput(etShipAddress, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+
+
+        if (invoice.getId() != 0) {
+            invoice.find();
+            etName.setText(invoice.list.get(0).getCustomerNane());
+            etMobile.setText(invoice.list.get(0).getCustomerMobile());
+            etShipAddress.setText(invoice.list.get(0).getShipAddress());
+            tvTotal.setText(NumberFormat.getIntegerInstance().format(invoice.list.get(0).getTotal()));
+            findViewById(R.id.btnCreateInvoice).setVisibility(View.GONE);
         }
-
     }
 
 
@@ -63,7 +78,7 @@ public class CreateInvoice extends AppCompatActivity {
         db.find();
         String[] str = new String[db.list.size()];
         for (int i = 0; i < db.list.size(); i++) {
-            str[i] = db.list.get(i).getCustomerNane() + "-" + db.list.get(i).getCustomerMobile() + "-" + db.list.get(i).getId();
+            str[i] = db.list.get(i).getFullname() + "-" + db.list.get(i).getMobile() + "-" + db.list.get(i).getId();
         }
 
         return str;
@@ -71,7 +86,6 @@ public class CreateInvoice extends AppCompatActivity {
 
 
     public void create(View view) {
-        invoice = new Invoice(CreateInvoice.this);
         invoice.setId(0);
         invoice.setBuyDate(Calendar.getInstance().getTime().toString());
         invoice.setPayComplete(0);
@@ -80,10 +94,39 @@ public class CreateInvoice extends AppCompatActivity {
         boolean ok = invoice.add();
         Intent cusList = new Intent();
         setResult(ok ? RESULT_OK : RESULT_CANCELED, cusList);
-        if (ok) finish();
+
+        if (invoice.getId() != 0) {
+            Intent pro = new Intent(getApplicationContext(), Activity_InvoiceDetail.class);
+            pro.putExtra("orderid", invoice.getId());
+            startActivityForResult(pro, proList);
+        } else {
+            Toast.makeText(this, "Nhập thông tin hóa đơn trước", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void addProduct(View view) {
+        if (invoice.getId() != 0) {
+            Intent pro = new Intent(getApplicationContext(), Activity_InvoiceDetail.class);
+            pro.putExtra("orderid", invoice.getId());
+            startActivityForResult(pro, proList);
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == proList) {
+            if (invoice.getId() != 0) {
+                invoice.find();
+                etName.setText(invoice.list.get(0).getCustomerNane());
+                etMobile.setText(invoice.list.get(0).getCustomerMobile());
+                etShipAddress.setText(invoice.list.get(0).getShipAddress());
+                tvTotal.setText(invoice.list.get(0).getTotal() + "");
+            }
+        }
+    }
+
+    public void exit(View view) {
+        finish();
     }
 }

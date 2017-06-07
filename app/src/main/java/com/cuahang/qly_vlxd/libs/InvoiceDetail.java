@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.cuahang.qly_vlxd.R;
@@ -76,8 +77,8 @@ public class InvoiceDetail {
 
     public boolean add() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("invoiceID", invoiceID);
-        contentValues.put("productID", productID);
+        contentValues.put("orderid", invoiceID);
+        contentValues.put("productid", productID);
         contentValues.put("quantity", quantity);
         contentValues.put("price", price);
 
@@ -96,18 +97,18 @@ public class InvoiceDetail {
     }
 
     public boolean delete() {
-        return db.delete("invoice", " invoiceid=? and productid=? and price=?",
+        return db.delete("orderdetail", " orderid=? and productid=? and price=?",
                 new String[]{invoiceID + "", productID + "", price + ""}) > 0;
     }
 
     public void find() {
-        String sql = "SELECT orderid, productid, price, quantity " +
-                "FROM orders, product " +
-                "where order.productid = product.id and orderid=" + invoiceID + " group by orderid";
+        String sql = "SELECT orderid, productid, orderdetail.price, orderdetail.quantity " +
+                "FROM orderdetail, product " +
+                "where orderdetail.productid = product.id and orderid=" + invoiceID;
         if (invoiceID == 0) {
-            sql = "SELECT orderid, productid, price, quantity " +
-                    "FROM orders, product " +
-                    "where order.productid = product.id  group by orderid";
+            sql = "SELECT orderid, productid, orderdetail.price, orderdetail.quantity " +
+                    "FROM orderdetail, product " +
+                    "where orderdetail.productid = product.id";
         }
         Cursor cursor = db.find(sql + " order by orderid desc");
 
@@ -154,16 +155,16 @@ public class InvoiceDetail {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            DBAdapter.Item item;
+            Item item;
             if (convertView == null) {
                 item = new Item();
 
-                convertView = ((Activity) context).getLayoutInflater().inflate(R.layout.invoice_item, parent, false);
-                /*item.id = (TextView) convertView.findViewById(R.id.tvID);
-                item.customername = (TextView) convertView.findViewById(R.id.tvCustomerName);
-                item.total = (TextView) convertView.findViewById(R.id.tvTotal);
-                item.mobile = (TextView) convertView.findViewById(R.id.tvMobile);
-                item.btnCall = (ImageButton) convertView.findViewById(R.id.btnCall);*/
+                convertView = ((Activity) context).getLayoutInflater().inflate(R.layout.invoice_detail_item, parent, false);
+                item.productid = (TextView) convertView.findViewById(R.id.tvID);
+                item.productName = (TextView) convertView.findViewById(R.id.tvProductName);
+                item.price = (TextView) convertView.findViewById(R.id.tvPrice);
+                item.quantity = (TextView) convertView.findViewById(R.id.tvQuantity);
+                item.btnDelete = (ImageButton) convertView.findViewById(R.id.btnCall);
                 convertView.setTag(item);
 
                 convertView.setLongClickable(true);
@@ -171,24 +172,31 @@ public class InvoiceDetail {
                 item = (Item) convertView.getTag();
             }
 
-            /*item.btnCall.setOnClickListener(new View.OnClickListener() {
+            item.btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + list.get(position).getCustomerMobile()));
-                    c.startActivity(intent);
+                    InvoiceDetail invoiceDetail = new InvoiceDetail(context);
+                    invoiceDetail.setProductID(list.get(position).getProductID());
+                    invoiceDetail.setInvoiceID(list.get(position).getInvoiceID());
+                    invoiceDetail.setPrice(list.get(position).getPrice());
+                    invoiceDetail.delete();
+
+                    notifyDataSetChanged();
+                    ((Activity) context).finish();
                 }
             });
 
-            item.id.setText(list.get(position).getId() + "");
-            item.customername.setText(list.get(position).getCustomerNane());
-            item.total.setText(list.get(position).getTotal() + "");
-            item.mobile.setText(list.get(position).getCustomerMobile());*/
+            item.productid.setText(list.get(position).getProductID() + "");
+            item.productName.setText(list.get(position).getProductID() + "");
+            item.price.setText(list.get(position).getPrice() + "");
+            item.quantity.setText(list.get(position).getQuantity() + "");
 
             return convertView;
         }
 
         class Item {
-            TextView orderid, productid, price, quantity;
+            TextView productid, productName, price, quantity;
+            ImageButton btnDelete;
         }
     }
 }

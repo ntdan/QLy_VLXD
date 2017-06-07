@@ -9,12 +9,16 @@ import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cuahang.qly_vlxd.R;
 import com.cuahang.qly_vlxd.sqlite.SQLite_DB;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 /**
@@ -30,6 +34,7 @@ public class Invoice {
     String shipAddress;
     String buyDate;
     float total;
+    int currentPay;
     int payComplete;// 1= completed
     SQLite_DB db;
     Context c;
@@ -40,6 +45,14 @@ public class Invoice {
     public Invoice(Context context) {
         db = new SQLite_DB(context);
         c = context;
+    }
+
+    public int getCurrentPay() {
+        return currentPay;
+    }
+
+    public void setCurrentPay(int currentPay) {
+        this.currentPay = currentPay;
     }
 
     public float getTotal() {
@@ -116,18 +129,22 @@ public class Invoice {
         contentValues.put("shipaddress", shipAddress);
         contentValues.put("completed", payComplete);
         contentValues.put("paydate", buyDate);
+        contentValues.put("currentpay", currentPay);
 
-        return db.add("orders", contentValues) > 0;
+        id = (int) db.add("orders", contentValues);
+
+        return id > 0;
     }
 
-    public boolean update() {
+    public boolean update(Invoice invoice) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("customerid", customerID);
-        contentValues.put("shipaddress", shipAddress);
-        contentValues.put("completed", payComplete);
-        contentValues.put("paydate", buyDate);
+        contentValues.put("customerid", invoice.customerID);
+        contentValues.put("shipaddress", invoice.shipAddress);
+        contentValues.put("completed", invoice.payComplete);
+        contentValues.put("currentpay", invoice.currentPay);
+        contentValues.put("paydate", invoice.buyDate);
 
-        return db.update("orders", contentValues, " id=" + id, null) > 0;
+        return db.update("orders", contentValues, " id=" + invoice.id, null) > 0;
     }
 
     public boolean delete() {
@@ -136,12 +153,12 @@ public class Invoice {
 
     public void find() {
         String sql = "SELECT orders.id, orders.customerid, orders.paydate, orders.completed,orders.shipaddress, fullname, mobile, sum(price*quantity) total\n" +
-                "FROM orders, customer, orderdetail \n" +
-                "where customer.id = orders.customerid and orders.id = orderdetail.orderid and id=" + id + " group by orders.id";
+                ", currentpay FROM orders, customer, orderdetail \n" +
+                "where completed =0 and customer.id = orders.customerid and orders.id = orderdetail.orderid and orderid=" + id + " group by orders.id";
         if (id == 0) {
             sql = "SELECT orders.id, orders.customerid, orders.paydate, orders.completed,orders.shipaddress, fullname, mobile, sum(price*quantity) total\n" +
-                    "FROM orders, customer, orderdetail \n" +
-                    "where customer.id = orders.customerid and orders.id = orderdetail.orderid group by orders.id";
+                    ", currentpay FROM orders, customer, orderdetail \n" +
+                    "where  completed =0 and customer.id = orders.customerid and orders.id = orderdetail.orderid group by orders.id";
         }
         Cursor cursor = db.find(sql + " order by orders.customerid desc");
 
@@ -156,6 +173,7 @@ public class Invoice {
                 invoice.setCustomerMobile(cursor.getString(cursor.getColumnIndex("mobile")));
                 invoice.setBuyDate(cursor.getString(cursor.getColumnIndex("paydate")));
                 invoice.setPayComplete(cursor.getInt(cursor.getColumnIndex("completed")));
+                invoice.setCurrentPay(cursor.getInt(cursor.getColumnIndex("currentpay")));
                 invoice.setShipAddress(cursor.getString(cursor.getColumnIndex("shipaddress")));
                 invoice.setTotal(cursor.getInt(cursor.getColumnIndex("total")));
 
@@ -202,6 +220,9 @@ public class Invoice {
                 item.customername = (TextView) convertView.findViewById(R.id.tvCustomerName);
                 item.total = (TextView) convertView.findViewById(R.id.tvTotal);
                 item.mobile = (TextView) convertView.findViewById(R.id.tvMobile);
+                item.pay = (TextView) convertView.findViewById(R.id.tvPay);
+                item.etPay = (EditText) convertView.findViewById(R.id.etPay);
+                item.btnPay = (Button) convertView.findViewById(R.id.btnPay);
                 item.btnCall = (ImageButton) convertView.findViewById(R.id.btnCall);
                 convertView.setTag(item);
 
@@ -218,17 +239,42 @@ public class Invoice {
                 }
             });
 
+            item.btnPay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int t = Integer.parseInt(item.etPay.getText().toString()) + list.get(position).getCurrentPay();
+
+                    if (t <= list.get(position).getTotal()) {
+                        list.get(position).setCurrentPay(list.get(position).getCurrentPay()
+                                + Integer.parseInt(item.etPay.getText().toString()));
+                        notifyDataSetChanged();
+
+                        Invoice invoice = new Invoice(context);
+                        if (t == list.get(position).getTotal())
+                            list.get(position).setPayComplete(1);
+                        invoice.update(list.get(position));
+                    } else {
+                        Toast.makeText(context, "Số tiền nhiều hơn tiền cần trả.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
             item.id.setText(list.get(position).getId() + "");
             item.customername.setText(list.get(position).getCustomerNane());
-            item.total.setText(list.get(position).getTotal() + "");
+            NumberFormat nf = NumberFormat.getIntegerInstance();
+            item.total.setText(nf.format(list.get(position).getTotal()));
+            item.pay.setText(NumberFormat.getIntegerInstance().format(list.get(position).getCurrentPay()));
             item.mobile.setText(list.get(position).getCustomerMobile());
+            item.etPay.setText("0");
 
             return convertView;
         }
 
         class Item {
-            TextView id, customername, total, mobile;
+            TextView id, customername, total, mobile, pay;
+            EditText etPay;
             ImageButton btnCall;
+            Button btnPay;
         }
     }
 }

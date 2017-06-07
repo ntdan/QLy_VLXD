@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:inputType="number"
-                    android:padding="4dp"
+                    android:padding="8dp"
                     android:text="Total:"
                     android:textColor="@android:color/black"
                     android:textColorHint="@android:color/white" />
@@ -93,17 +93,6 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btnSelectProduct"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:layout_weight="1"
-            android:background="@color/colorPrimaryDark"
-            android:onClick="addProduct"
-            android:text="@string/btn_AddProduct"
-            android:textColor="@color/colorWhite" />
-
-        <Button
             android:id="@+id/btnCreateInvoice"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -113,6 +102,28 @@
             android:onClick="create"
             android:text="@string/btn_Create"
             android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btnSelectProduct"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"
+            android:onClick="addProduct"
+            android:text="@string/action_View"
+            android:textColor="@color/colorWhite" />
+        <Button
+            android:id="@+id/btnExit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"
+            android:onClick="exit"
+            android:text="Thoát"
+            android:textColor="@color/colorWhite" />
+
     </LinearLayout>
 
 </LinearLayout>

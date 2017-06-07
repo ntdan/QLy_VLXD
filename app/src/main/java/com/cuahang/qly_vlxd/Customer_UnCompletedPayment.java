@@ -2,15 +2,15 @@ package com.cuahang.qly_vlxd;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.cuahang.qly_vlxd.libs.Invoice;
 
@@ -29,27 +29,16 @@ public class Customer_UnCompletedPayment extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        if (invoice == null) {
-            listViewInv = (ListView) findViewById(R.id.lvInvoice);
-            invoice = new Invoice(Customer_UnCompletedPayment.this);
-            invoice.setId(0);
-            invoice.find();
-            if (invoice.list != null && invoice.list.size() > 0) {
-                adapter = invoice.new DBAdapter(invoice.list, Customer_UnCompletedPayment.this);
-                listViewInv.setAdapter(adapter);
-            }
-
-            registerForContextMenu(listViewInv);
+        listViewInv = (ListView) findViewById(R.id.lvInvoice);
+        invoice = new Invoice(Customer_UnCompletedPayment.this);
+        invoice.setId(0);
+        invoice.find();
+        if (invoice.list != null && invoice.list.size() > 0) {
+            adapter = invoice.new DBAdapter(invoice.list, Customer_UnCompletedPayment.this);
+            listViewInv.setAdapter(adapter);
         }
+
+        registerForContextMenu(listViewInv);
     }
 
     @Override
@@ -93,6 +82,22 @@ public class Customer_UnCompletedPayment extends AppCompatActivity {
 
         if (item.getItemId() == R.id.mnuExit) {
             finish();
+            return true;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.mnXem) {
+            Intent invoice = new Intent(Customer_UnCompletedPayment.this, CreateInvoice.class);
+
+            int id = 0;
+            AdapterView.AdapterContextMenuInfo adp = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            TextView tv = (TextView) adp.targetView.findViewById(R.id.tvID);
+            id = Integer.parseInt(tv.getText().toString());
+            invoice.putExtra("id", id);
+            startActivityForResult(invoice, invCode);
             return true;
         }
         return true;
