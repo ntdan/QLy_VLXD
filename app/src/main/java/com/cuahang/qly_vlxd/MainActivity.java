@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(v.getId() == R.id.btnExit){
             finish();
+            System.exit(0);
         }
 
         startActivity(intent);

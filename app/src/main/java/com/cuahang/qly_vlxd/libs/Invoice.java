@@ -221,6 +221,7 @@ public class Invoice {
                 item.total = (TextView) convertView.findViewById(R.id.tvTotal);
                 item.mobile = (TextView) convertView.findViewById(R.id.tvMobile);
                 item.pay = (TextView) convertView.findViewById(R.id.tvPay);
+                item.date = (TextView) convertView.findViewById(R.id.tvDate);
                 item.etPay = (EditText) convertView.findViewById(R.id.etPay);
                 item.btnPay = (Button) convertView.findViewById(R.id.btnPay);
                 item.btnCall = (ImageButton) convertView.findViewById(R.id.btnCall);
@@ -262,16 +263,17 @@ public class Invoice {
             item.id.setText(list.get(position).getId() + "");
             item.customername.setText(list.get(position).getCustomerNane());
             NumberFormat nf = NumberFormat.getIntegerInstance();
-            item.total.setText(nf.format(list.get(position).getTotal()));
-            item.pay.setText(NumberFormat.getIntegerInstance().format(list.get(position).getCurrentPay()));
+            item.total.setText(nf.format(list.get(position).getTotal()) + " đ");
+            item.pay.setText(NumberFormat.getIntegerInstance().format(list.get(position).getCurrentPay()) + " đ");
             item.mobile.setText(list.get(position).getCustomerMobile());
+            item.date.setText(list.get(position).getBuyDate().toString());
             item.etPay.setText("0");
 
             return convertView;
         }
 
         class Item {
-            TextView id, customername, total, mobile, pay;
+            TextView id, customername, total, mobile, pay, date;
             EditText etPay;
             ImageButton btnCall;
             Button btnPay;

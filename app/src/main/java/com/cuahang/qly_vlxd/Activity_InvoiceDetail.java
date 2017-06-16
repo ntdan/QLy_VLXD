@@ -124,20 +124,43 @@ public class Activity_InvoiceDetail extends AppCompatActivity {
     }
 
     public void mua(View view) {
+        boolean newPro = true;
         int price = Integer.parseInt(etPrice.getText().toString());
         int quantity = Integer.parseInt(etQuantity.getText().toString());
-        invoiceDetail.setInvoiceID(invoiceID);
-        invoiceDetail.setProductID(productID);
-        invoiceDetail.setPrice(price);
-        invoiceDetail.setQuantity(quantity);
 
-        if (invoiceDetail.add()) {
-            invoiceDetail.find();
-            if (invoiceDetail.list != null && invoiceDetail.list.size() > 0) {
-                adapter = invoiceDetail.new DBAdapter(invoiceDetail.list, Activity_InvoiceDetail.this);
-                lvProduct.setAdapter(adapter);
+        invoiceDetail.find();
+        if (invoiceDetail.list != null && invoiceDetail.list.size() > 0) {
+            for (int i = 0; i < invoiceDetail.list.size(); i++) {
+                if (invoiceDetail.list.get(i).getProductID() == productID) {
+                    invoiceDetail.setInvoiceID(invoiceID);
+                    invoiceDetail.setProductID(productID);
+                    invoiceDetail.setPrice(price);
+                    quantity = (int) (invoiceDetail.list.get(i).getQuantity() + quantity);
+                    invoiceDetail.setQuantity(quantity);
+
+                    invoiceDetail.update();
+                    invoiceDetail.list.get(i).setQuantity(quantity);
+                    newPro = false;
+
+                    break;
+                }
             }
         }
+        if (newPro) {
+            invoiceDetail.setInvoiceID(invoiceID);
+            invoiceDetail.setProductID(productID);
+            invoiceDetail.setPrice(price);
+            invoiceDetail.setQuantity(quantity);
+
+            if (invoiceDetail.add()) {
+                invoiceDetail.find();
+            }
+        }
+        if (invoiceDetail.list != null && invoiceDetail.list.size() > 0) {
+            adapter = invoiceDetail.new DBAdapter(invoiceDetail.list, Activity_InvoiceDetail.this);
+            lvProduct.setAdapter(adapter);
+        }
+
     }
 
     public void exit(View view) {

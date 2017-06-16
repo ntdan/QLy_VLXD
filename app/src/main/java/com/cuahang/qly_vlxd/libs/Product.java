@@ -151,6 +151,7 @@ public class Product {
                 pro.setCode(cursor.getString(cursor.getColumnIndex("code")));
                 pro.setName(cursor.getString(cursor.getColumnIndex("name")));
                 pro.setPrice(cursor.getString(cursor.getColumnIndex("price")));
+                pro.setUnit(cursor.getString(cursor.getColumnIndex("unit")));
                 pro.setImage(cursor.getString(cursor.getColumnIndex("image")));
                 pro.setQuantity(cursor.getString(cursor.getColumnIndex("quantity")));
 

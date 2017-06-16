@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -23,6 +24,7 @@ public class InvoiceDetail {
     public ArrayList<InvoiceDetail> list;
     int invoiceID;
     int productID;
+    String productName;
     double quantity;
     double price;
     SQLite_DB db;
@@ -33,14 +35,23 @@ public class InvoiceDetail {
         c = context;
     }
 
-    public InvoiceDetail(int invoiceID, int productID, double quantity, double price) {
+    public InvoiceDetail(int invoiceID, int productID, double quantity, double price, String productName) {
         this.invoiceID = invoiceID;
         this.productID = productID;
         this.quantity = quantity;
         this.price = price;
+        this.productName = productName;
     }
 
     public InvoiceDetail() {
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public int getInvoiceID() {
@@ -86,14 +97,21 @@ public class InvoiceDetail {
     }
 
     public boolean update() {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("invoiceID", invoiceID);
-        contentValues.put("productID", productID);
-        contentValues.put("quantity", quantity);
-        contentValues.put("price", price);
+        boolean ok = false;
+        try {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("orderID", invoiceID);
+            contentValues.put("productID", productID);
+            contentValues.put("quantity", quantity);
+            contentValues.put("price", price);
 
-        return db.update("orderdetail", contentValues, " invoiceid=? and productid=? and price=?",
-                new String[]{invoiceID + "", productID + "", price + ""}) > 0;
+            ok = db.update("orderdetail", contentValues, " orderid=? and productid=? and price=?",
+                    new String[]{invoiceID + "", productID + "", price + ""}) > 0;
+        } catch (Exception ex) {
+            Log.d("Loi: ", ex.toString());
+        }
+
+        return ok;
     }
 
     public boolean delete() {
@@ -102,11 +120,11 @@ public class InvoiceDetail {
     }
 
     public void find() {
-        String sql = "SELECT orderid, productid, orderdetail.price, orderdetail.quantity " +
+        String sql = "SELECT orderid, productid, orderdetail.price, orderdetail.quantity, product.name " +
                 "FROM orderdetail, product " +
                 "where orderdetail.productid = product.id and orderid=" + invoiceID;
         if (invoiceID == 0) {
-            sql = "SELECT orderid, productid, orderdetail.price, orderdetail.quantity " +
+            sql = "SELECT orderid, productid, orderdetail.price, orderdetail.quantity, product.name " +
                     "FROM orderdetail, product " +
                     "where orderdetail.productid = product.id";
         }
@@ -120,6 +138,7 @@ public class InvoiceDetail {
                 invoiceDetail.setInvoiceID(cursor.getInt(cursor.getColumnIndex("orderid")));
                 invoiceDetail.setPrice(cursor.getDouble(cursor.getColumnIndex("price")));
                 invoiceDetail.setQuantity(cursor.getDouble(cursor.getColumnIndex("quantity")));
+                invoiceDetail.setProductName(cursor.getString(cursor.getColumnIndex("name")));
 
                 list.add(invoiceDetail);
 
@@ -187,7 +206,7 @@ public class InvoiceDetail {
             });
 
             item.productid.setText(list.get(position).getProductID() + "");
-            item.productName.setText(list.get(position).getProductID() + "");
+            item.productName.setText(list.get(position).getProductName());
             item.price.setText(list.get(position).getPrice() + "");
             item.quantity.setText(list.get(position).getQuantity() + "");
 

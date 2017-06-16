@@ -92,6 +92,15 @@ public class CustomerList extends AppCompatActivity {
             }
             return true;
         }
+        if (item.getItemId() == R.id.mnXem) {
+            AdapterView.AdapterContextMenuInfo inf = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            String strID = ((TextView) inf.targetView.findViewById(R.id.tvCusID)).getText().toString();
+            customer.setId(Integer.parseInt(strID));
+            Intent cus = new Intent(CustomerList.this, NewCustomer.class);
+            cus.putExtra("id", Integer.parseInt(strID));
+            startActivityForResult(cus, cusCode);
+            return true;
+        }
         return true;
     }
 
