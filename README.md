@@ -1,3 +1,3 @@
 # QLy_VLXD
-Căn ban về android
+Căn bản về android
 Một ứng dụng căn bản của Android quản lý bán VLXD
