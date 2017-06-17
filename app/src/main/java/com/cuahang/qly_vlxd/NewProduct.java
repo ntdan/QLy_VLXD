@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 
+import com.cuahang.qly_vlxd.libs.HoTro;
 import com.cuahang.qly_vlxd.libs.Product;
 
 public class NewProduct extends AppCompatActivity {
@@ -21,6 +22,13 @@ public class NewProduct extends AppCompatActivity {
 
     public void click(View view) {
         if (view.getId() == R.id.btnSave) {
+            String m = ((EditText) findViewById(R.id.etProductUnit)).getText().toString();
+            if (!(m.length() <= 7 && Character.isLetter(m.charAt(0)))) {
+                HoTro.ThongBao(NewProduct.this, "Mã sản phẩm phải bắt đầu là chữ và độ dài tối đa là 7.");
+                return;
+            }
+
+
             Product pro = new Product(NewProduct.this);
             pro.setName(((EditText) findViewById(R.id.etProductName)).getText().toString());
             pro.setCode(((EditText) findViewById(R.id.etProductCode)).getText().toString());

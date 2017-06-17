@@ -45,6 +45,7 @@ public class CustomerList extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK && requestCode == cusCode) {
+            customer.setId(0);
             customer.find();
             if (customer.list != null && customer.list.size() > 0) {
                 adapter = customer.new DBAdapter(customer.list, CustomerList.this);

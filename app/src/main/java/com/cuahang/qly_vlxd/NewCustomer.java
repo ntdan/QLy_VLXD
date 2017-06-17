@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.cuahang.qly_vlxd.libs.Customer;
+import com.cuahang.qly_vlxd.libs.HoTro;
 
 public class NewCustomer extends AppCompatActivity {
     int id;
@@ -34,6 +35,23 @@ public class NewCustomer extends AppCompatActivity {
 
     public void click(View view) {
         if (view.getId() == R.id.btnSave) {
+
+            String m = ((EditText) findViewById(R.id.etCustomerMobile)).getText().toString();
+            if (m.length() < 10 || m.length() > 11) {
+                HoTro.ThongBao(NewCustomer.this, "Điện thoại phải 10 hoặc 11 số");
+                return;
+            }
+
+            if (m.length() == 10 && !(m.startsWith("09") || m.startsWith("029"))) {
+                HoTro.ThongBao(NewCustomer.this, "Điện thoại 10 số phải bắt đầu 09 hoặc 029");
+                return;
+            }
+
+            if (m.length() == 11 && !m.startsWith("01")) {
+                HoTro.ThongBao(NewCustomer.this, "Điện thoại 11 số phải bắt đầu 01");
+                return;
+            }
+
             customer.setFullname(((EditText) findViewById(R.id.etCustomerFullname)).getText().toString());
             customer.setAddress(((EditText) findViewById(R.id.etCustomerAddress)).getText().toString());
             customer.setMobile(((EditText) findViewById(R.id.etCustomerMobile)).getText().toString());
@@ -44,6 +62,7 @@ public class NewCustomer extends AppCompatActivity {
                 if (id == 0) {
                     ok = customer.add();
                 } else {
+                    customer.setId(id);
                     ok = customer.update();
                 }
 

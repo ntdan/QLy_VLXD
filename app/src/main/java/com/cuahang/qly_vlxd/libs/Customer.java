@@ -124,10 +124,10 @@ public class Customer {
 
     public void find()
     {
-        String sql = "select * from customer where id="+ id;
+        String sql = "select id, fullname, mobile, address, note, code from customer where id=" + id;
         if(id == 0)
         {
-            sql = "select * from customer";
+            sql = "select id, fullname, mobile, address, note, code from customer";
         }
         Cursor cursor = db.find(sql + " order by id desc");
 
@@ -140,6 +140,7 @@ public class Customer {
                 customer.setFullname(cursor.getString(cursor.getColumnIndex("fullname")));
                 customer.setAddress(cursor.getString(cursor.getColumnIndex("address")));
                 customer.setCode(cursor.getString(cursor.getColumnIndex("code")));
+                customer.setNote(cursor.getString(cursor.getColumnIndex("note")));
                 customer.setMobile(cursor.getString(cursor.getColumnIndex("mobile")));
 
                 list.add(customer);
@@ -197,7 +198,7 @@ public class Customer {
 
             item.id.setText(list.get(position).getId() + "");
             item.name.setText(list.get(position).getFullname());
-            item.address.setText(list.get(position).getFullname());
+            item.address.setText(list.get(position).getAddress());
             item.mobile.setText(list.get(position).getMobile());
 
             return convertView;
