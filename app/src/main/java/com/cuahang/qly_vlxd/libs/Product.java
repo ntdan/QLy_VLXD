@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.cuahang.qly_vlxd.R;
 import com.cuahang.qly_vlxd.sqlite.SQLite_DB;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 /**
@@ -150,7 +151,9 @@ public class Product {
                 pro.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 pro.setCode(cursor.getString(cursor.getColumnIndex("code")));
                 pro.setName(cursor.getString(cursor.getColumnIndex("name")));
-                pro.setPrice(cursor.getString(cursor.getColumnIndex("price")));
+                NumberFormat nf = NumberFormat.getIntegerInstance();
+                int p = cursor.getInt(cursor.getColumnIndex("price"));
+                pro.setPrice(nf.format(p) + " đ");
                 pro.setUnit(cursor.getString(cursor.getColumnIndex("unit")));
                 pro.setImage(cursor.getString(cursor.getColumnIndex("image")));
                 pro.setQuantity(cursor.getString(cursor.getColumnIndex("quantity")));

@@ -3,11 +3,14 @@ package com.cuahang.qly_vlxd;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,12 +22,31 @@ public class CustomerList extends AppCompatActivity {
     ListView listViewCus;
     boolean chonMua = false;
     Customer.DBAdapter adapter;
+    EditText etFilter;
     private int cusCode = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_list);
+
+        etFilter = (EditText) findViewById(R.id.etFilter);
+        etFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                adapter.getFilter().filter(s.toString());
+            }
+        });
 
         if (customer == null) {
             listViewCus = (ListView) findViewById(R.id.lvCustomer);

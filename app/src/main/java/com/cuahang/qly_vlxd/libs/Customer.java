@@ -7,12 +7,15 @@ import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.cuahang.qly_vlxd.R;
 import com.cuahang.qly_vlxd.sqlite.SQLite_DB;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ntdan on 5/17/17.
@@ -152,13 +155,16 @@ public class Customer {
         }
     }
 
-    public class DBAdapter extends BaseAdapter
+    public class DBAdapter extends BaseAdapter implements Filterable
     {
-        ArrayList<Customer> list;
+        ArrayList<Customer> alllist;
+        List<Customer> list;
         Context context;
+        private Filter myFilter;
 
         public DBAdapter(ArrayList<Customer> list, Context context) {
             this.list = list;
+            alllist = list;
             this.context = context;
         }
 
@@ -203,6 +209,52 @@ public class Customer {
 
             return convertView;
         }
+
+        @Override
+        public Filter getFilter() {
+            if (myFilter == null)
+                myFilter = new MyFilter();
+            return myFilter;
+        }
+
+        // mo ta bo loc
+        class MyFilter extends Filter {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                // cai dat noi dung bo loc
+                if (constraint == null || constraint.equals("")) {
+                    // khong loc
+                    results.values = alllist;
+                    results.count = alllist.size();
+                } else {
+                    // tim
+                    List<Customer> customers = new ArrayList<>();
+
+                    for (Customer p : alllist) {
+                        if (p.getFullname().toUpperCase().startsWith(constraint.toString().toUpperCase()))
+                            customers.add(p);
+                    }
+
+                    results.values = customers;
+                    results.count = customers.size();
+
+                }
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                if (results.count == 0)
+                    notifyDataSetInvalidated();
+                else {
+                    list = (List<Customer>) results.values;
+                    notifyDataSetChanged();
+                }
+            }
+        }
+
 
         class Item {
             TextView name, address, mobile, id;
